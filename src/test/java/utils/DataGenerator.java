@@ -3,6 +3,7 @@ package utils;
 import com.github.javafaker.Faker;
 
 
+import jdk.jfr.ContentType;
 import lombok.Value;
 
 
@@ -16,6 +17,8 @@ import java.util.Random;
 public class DataGenerator {
     private DataGenerator() {
     }
+
+
 
     public static String generateData(int addDays, String pattern) {
         return LocalDate.now().plusDays(addDays).format(DateTimeFormatter.ofPattern(pattern));

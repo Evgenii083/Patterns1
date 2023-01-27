@@ -24,7 +24,7 @@ public class СardDeliveryFormTest {
     }
 
     @Test
-    public void happyPathWithoutReplanningMeeting() {
+    public void happyPathWithoutReplanningMeeting() throws InterruptedException {
         int daysToAddFirstMeeting = 5;
         String firstMeetingDay = DataGenerator.generateData(daysToAddFirstMeeting, "dd.MM.yyyy");
         int daysToAddSecondMeeting = 7;
@@ -32,25 +32,26 @@ public class СardDeliveryFormTest {
         DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUser("ru");
 
         $x("//input[contains (@placeholder, 'Город' )]").setValue(validUser.getCity());
-        $x("//*[contains(@placeholder , 'Дата встречи')]").click();
         $x("//* [contains(@placeholder , 'Дата встречи')]")
                 .sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
         $x("//*[contains(@placeholder , 'Дата встречи')]").setValue(firstMeetingDay);
         $("[data-test-id='name'] input").setValue(validUser.getName());
         $("[data-test-id='phone'] input").setValue(validUser.getPhone());
         $x("//label[contains(@data-test-id, 'agreement')]").click();
-        $x("//button[contains(@class,'button button_view_extra button_size_m button_theme_alfa-on-white')]").click();
+        $x("//*[contains(text(),'Запланировать')]").click();
         $x("//*[contains(@class,'notification__content')]")
                 .shouldBe(visible, Duration.ofMillis(3000))
                 .shouldHave(Condition.text("Встреча успешно запланирована на " + firstMeetingDay));
         $x("//*[contains(@placeholder , 'Дата встречи')]").click();
         $x("//* [contains(@placeholder , 'Дата встречи')]")
-                .sendKeys(Keys.chord(Keys.COMMAND + "A"), Keys.DELETE);
+                .sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
         $x("//*[contains(@placeholder , 'Дата встречи')]").setValue(secondMeetingDay);
+        Thread.sleep(3000);
         $x("//*[contains(text(), 'Запланировать')]").click();
         $x("//*[contains(text(),'Необходимо подтверждение')]").shouldBe(appear, Duration.ofSeconds(3));
         $x("//div[contains(text(),'У вас уже запланирована встреча на другую дату. Перепланировать?')]")
                 .shouldBe(appear, Duration.ofSeconds(3));
+        Thread.sleep(3000);
         $x("//div[contains(text(),'Перепланировать')]").click();
         $x("//*[contains(@class,'notification__content')]")
                 .shouldHave(Condition.text("Встреча успешно запланирована на " + secondMeetingDay),
