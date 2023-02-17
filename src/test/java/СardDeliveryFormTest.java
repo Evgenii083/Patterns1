@@ -57,17 +57,14 @@ public class СardDeliveryFormTest {
         $x("//*[contains(@class,'notification__content')]")
                 .shouldBe(visible, Duration.ofMillis(3000))
                 .shouldHave(Condition.text("Встреча успешно запланирована на " + firstMeetingDay));
-        $x("//*[contains(@placeholder , 'Дата встречи')]").click();
         $x("//* [contains(@placeholder , 'Дата встречи')]")
                 .sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
         $x("//*[contains(@placeholder , 'Дата встречи')]").setValue(secondMeetingDay);
-        Thread.sleep(3000);
         $x("//*[contains(text(), 'Запланировать')]").click();
         $x("//*[contains(text(),'Необходимо подтверждение')]").shouldBe(appear, Duration.ofSeconds(3));
         $x("//div[contains(text(),'У вас уже запланирована встреча на другую дату. Перепланировать?')]")
                 .shouldBe(appear, Duration.ofSeconds(3));
-        Thread.sleep(3000);
-        $x("//div[contains(text(),'Перепланировать')]").click();
+        $x("//span[contains(text(),'Перепланировать')]").click();
         $x("//*[contains(@class,'notification__content')]")
                 .shouldHave(Condition.text("Встреча успешно запланирована на " + secondMeetingDay),
                         Duration.ofSeconds(5)).shouldBe(visible);
