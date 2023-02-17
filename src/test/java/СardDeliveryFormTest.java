@@ -2,6 +2,11 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 
 
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
@@ -16,11 +21,21 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class СardDeliveryFormTest {
 
+    @BeforeAll
+    static void setUpAllure() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
     @BeforeEach
     void setUp() {
         Configuration.holdBrowserOpen = true;
         Configuration.browserSize = "1000x900";
         open("http://localhost:9999/");
+    }
+
+    @AfterAll
+    static void tearDownAll(){
+        SelenideLogger.removeListener("allure");
     }
 
     @Test
